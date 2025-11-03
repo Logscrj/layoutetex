@@ -80,7 +80,7 @@
             box-sizing: border-box;
         }
 
-        /* --- Layout de Áreas --- */
+        /* --- Layout de Áreas (em Tabela, como planilha) --- */
         #layout-areas {
             display: grid;
             gap: 20px;
@@ -99,47 +99,47 @@
             border-bottom: 2px solid var(--cor-principal);
             padding-bottom: 5px;
             margin-top: 0;
-            cursor: pointer; /* Para indicar que é clicável (esconder/mostrar) */
+            cursor: pointer;
         }
 
-        .ruas-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        .tabela-vagas {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 15px;
         }
 
-        /* Estilo da "Vaga" (Rua) */
-        .vaga {
-            background-color: var(--cor-vazio);
+        .tabela-vagas th, .tabela-vagas td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .tabela-vagas th {
+            background-color: var(--cor-secundaria);
             color: var(--cor-texto);
-            padding: 10px;
-            border-radius: 4px;
-            width: 150px;
-            border: 1px solid var(--cor-secundaria);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85em;
+        }
+
+        /* Linha da Vaga */
+        .tabela-vagas tr {
             cursor: pointer;
             transition: background-color 0.3s;
-            box-sizing: border-box;
         }
 
-        .vaga.ocupada {
-            background-color: var(--cor-ocupado);
-            color: var(--cor-secundaria);
-            font-weight: bold;
+        .tabela-vagas tr:hover {
+            background-color: #ffe8cc; /* Cor de hover suave */
         }
 
-        .vaga:hover {
-            opacity: 0.9;
+        .vaga-ocupada {
+            background-color: #fff7e6; /* Fundo mais claro para ocupadas */
         }
-
-        .vaga h4 {
-            margin: 0 0 5px 0;
-            font-size: 1em;
-        }
-
-        .vaga-info {
-            font-size: 0.8em;
-        }
+        
+        .status-liberado { color: #28a745; font-weight: bold; }
+        .status-fifo { color: #007bff; font-weight: bold; }
+        .status-bloqueado, .status-qa { color: #dc3545; font-weight: bold; }
+        .status-cura { color: #ffc107; font-weight: bold; }
 
         /* --- Modal de Edição/Visualização --- */
         .modal {
@@ -222,9 +222,14 @@
             background-color: #CC7000;
         }
 
+        /* Estilo para itens dentro do modal */
+        .item-form {
+             margin-bottom: 20px;
+        }
+
     </style>
     <script>
-        // --- Base de Dados de Itens do Estoque (ATUALIZADA E COMPLETA) ---
+        // --- Base de Dados de Itens do Estoque (COMPLETA) ---
         // CLASSIFICADA COM BASE NO PDF FORNECIDO PELO USUÁRIO.
         const BASE_ITENS = {
             
@@ -471,22 +476,15 @@
         // FIM DA BASE DE DADOS DE ITENS
 
         // --- Estrutura de Vagas (Vazia) ---
-        // Capacidade e Ocupação são preenchidas no JS
         let vagasEstoque = {};
         
-        // Definição das Áreas e Vagas Iniciais
+        // Definição das Áreas e Vagas Iniciais (Baseado no Excel)
         const AREAS = [
             "Ruas", "Superboard", "Congelados", "Segregação", "OG",
             "Quarentena", "Triagem", "Pushback", "Pezinho"
         ];
         
-        // Inicializa as vagas. Capacidade e Itens serão adicionados via modal/interface.
-        AREAS.forEach(area => {
-            vagasEstoque[area] = {
-                capacidadeTotal: 0,
-                vagas: {}
-            };
-        });
+        // Inicializa as vagas. Capacidade e Ocupação são preenchidas no JS
 
         // Função para calcular o % de ocupação do estoque
         function calcularOcupacaoGeral() {
@@ -554,9 +552,9 @@
                 card.className = 'card-dashboard';
                 card.innerHTML = `
                     <h4>${tipo.split(' (')[0].replace('/', '/<br>')}</h4>
-                    <p>Qtd: ${qtd.toFixed(1)} | ${percentual.toFixed(1)}%</p>
+                    <p>Qtd: ${qtd.toFixed(0)} | ${percentual.toFixed(1)}%</p>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: ${percentual.toFixed(1)}%; background-color: var(--cor-ocupado);"></div>
+                        <div class="progress-bar" style="width: ${percentual.toFixed(1)}%; background-color: var(--cor-principal);"></div>
                     </div>
                 `;
                 dashboardMaterial.appendChild(card);
@@ -564,7 +562,7 @@
         }
 
 
-        // Função para renderizar o layout das áreas e vagas
+        // Função para renderizar o layout das áreas e vagas (AGORA EM FORMATO DE TABELA)
         function renderizarLayout() {
             const container = document.getElementById('layout-areas');
             container.innerHTML = ''; // Limpa o container
@@ -573,10 +571,6 @@
                 const areaDiv = document.createElement('div');
                 areaDiv.className = 'area';
                 areaDiv.innerHTML = `<h2 onclick="toggleArea('${areaNome}')">${areaNome} (Capacidade: ${vagasEstoque[areaNome].capacidadeTotal} Vagas)</h2>`;
-
-                const ruasContainer = document.createElement('div');
-                ruasContainer.id = `ruas-${areaNome.toLowerCase().replace(/\s/g, '-')}`;
-                ruasContainer.className = 'ruas-container';
 
                 // Adicionar botão de 'Criar Vaga/Rua'
                 const btnCriarVaga = document.createElement('button');
@@ -590,36 +584,71 @@
                 btnCriarVaga.style.cursor = 'pointer';
                 btnCriarVaga.style.marginBottom = '10px';
                 btnCriarVaga.style.marginRight = '10px';
-
                 areaDiv.appendChild(btnCriarVaga);
-                areaDiv.appendChild(ruasContainer);
 
+
+                const tableContainer = document.createElement('div');
+                tableContainer.id = `ruas-${areaNome.toLowerCase().replace(/\s/g, '-')}`;
+                tableContainer.style.display = 'block'; // Começa visível
+                
+                const tabela = document.createElement('table');
+                tabela.className = 'tabela-vagas';
+                tabela.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Área/Rua</th>
+                            <th>Capacidade (Vagas)</th>
+                            <th>Código</th>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Lote</th>
+                            <th>Validade</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                tableContainer.appendChild(tabela);
+
+                areaDiv.appendChild(tableContainer);
 
                 // Renderiza as vagas existentes
                 const vagasArea = vagasEstoque[areaNome].vagas;
-                for (const vagaID in vagasArea) {
-                    const vaga = vagasArea[vagaID];
-                    const vagaDiv = document.createElement('div');
-                    vagaDiv.className = `vaga ${vaga.itens.length > 0 ? 'ocupada' : ''}`;
-                    vagaDiv.id = vagaID;
-                    vagaDiv.onclick = () => abrirModalVaga(vagaID, vaga);
+                const tbody = tabela.querySelector('tbody');
+
+                // CORREÇÃO: Ordenação das vagas pelo nome da rua (ordem natural)
+                const vagasOrdenadas = Object.values(vagasArea).sort((a, b) => {
+                    return a.nomeRua.localeCompare(b.nomeRua, undefined, { numeric: true, sensitivity: 'base' });
+                });
+
+                vagasOrdenadas.forEach(vaga => {
+                    const vagaID = vaga.id;
+                    const isOcupada = vaga.itens.length > 0;
+                    const itemPrincipal = isOcupada ? vaga.itens[0] : {};
+                    const infoItem = BASE_ITENS[itemPrincipal.codigo] || { nome: 'VAGA VAZIA' };
                     
-                    let resumoItem = 'Vaga Vazia';
-                    if (vaga.itens.length > 0) {
-                        const itemPrincipal = vaga.itens[0];
-                        const info = BASE_ITENS[itemPrincipal.codigo] || { nome: 'Item Desconhecido' };
-                        resumoItem = `${info.nome.split(' ')[0]}... - Qtd: ${itemPrincipal.quantidade} - Status: ${itemPrincipal.status}`;
+                    let statusClass = '';
+                    if (itemPrincipal.status) {
+                        statusClass = 'status-' + itemPrincipal.status.toLowerCase().replace(/\s/g, '-');
                     }
 
-                    vagaDiv.innerHTML = `
-                        <h4>${vaga.nomeRua}</h4>
-                        <div class="vaga-info">
-                            <p>${resumoItem}</p>
-                            <p>Capacidade: ${vaga.capacidade}</p>
-                        </div>
+                    const tr = document.createElement('tr');
+                    tr.className = isOcupada ? 'vaga-ocupada' : '';
+                    tr.onclick = () => abrirModalVaga(vagaID, vaga);
+                    
+                    tr.innerHTML = `
+                        <td>${vaga.nomeRua}</td>
+                        <td>${vaga.capacidade}</td>
+                        <td>${isOcupada ? itemPrincipal.codigo : ''}</td>
+                        <td>${isOcupada ? infoItem.nome : 'VAGA VAZIA'}</td>
+                        <td>${isOcupada ? itemPrincipal.quantidade : '0'}</td>
+                        <td>${isOcupada ? itemPrincipal.lote : ''}</td>
+                        <td>${isOcupada && itemPrincipal.validade ? itemPrincipal.validade : ''}</td>
+                        <td class="${statusClass}">${isOcupada ? itemPrincipal.status : 'LIVRE'}</td>
                     `;
-                    ruasContainer.appendChild(vagaDiv);
-                }
+                    tbody.appendChild(tr);
+                });
 
                 container.appendChild(areaDiv);
             });
@@ -632,12 +661,12 @@
 
         // Função para mostrar/esconder o conteúdo da área
         function toggleArea(areaNome) {
-            const ruasContainer = document.getElementById(`ruas-${areaNome.toLowerCase().replace(/\s/g, '-')}`);
+            const tableContainer = document.getElementById(`ruas-${areaNome.toLowerCase().replace(/\s/g, '-')}`);
             // Alterna o estado de exibição
-            if (ruasContainer.style.display === 'flex') {
-                ruasContainer.style.display = 'none';
+            if (tableContainer.style.display === 'table' || tableContainer.style.display === 'block') {
+                tableContainer.style.display = 'none';
             } else {
-                 ruasContainer.style.display = 'flex';
+                 tableContainer.style.display = 'block';
             }
         }
 
@@ -667,7 +696,8 @@
             const areaNome = document.getElementById('area-associada').value;
             const nomeRua = document.getElementById('campo-nome-rua').value;
             const capacidade = parseInt(document.getElementById('campo-capacidade').value);
-            const vagaID = areaNome.toLowerCase().replace(/\s/g, '-') + '-' + nomeRua.toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9-]/g, ''); // Limpa caracteres especiais
+            // Gera um ID único e seguro baseado no nome
+            const vagaID = areaNome.toLowerCase().replace(/\s/g, '-') + '-' + nomeRua.toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9-]/g, '');
             
             if (vagasEstoque[areaNome].vagas[vagaID]) {
                 alert('Vaga/Rua com este nome já existe nesta área!');
@@ -860,6 +890,16 @@
                 itemParaRemover.remove();
             }
             
+            // Reindexa os IDs dos itens restantes
+            container.querySelectorAll('.item-form').forEach((itemForm, newIndex) => {
+                 itemForm.id = `item-form-${newIndex}`;
+                 // Atualizar o título do h4 e o onclick do botão de remover
+                 itemForm.querySelector('h4').textContent = `Item ${newIndex + 1}: ${itemForm.querySelector('.item-nome-material').value.split(' ')[0]}...`;
+                 itemForm.querySelector('button[onclick]').setAttribute('onclick', `removerItem(${newIndex})`);
+                 itemForm.querySelector('.item-codigo').setAttribute('onchange', `atualizarNomeMaterial(this, ${newIndex})`);
+            });
+
+
             // Se ficar vazio, adiciona a mensagem
             if (container.querySelectorAll('.item-form').length === 0) {
                  container.innerHTML = '<p>Nenhum item nesta vaga.</p>';
@@ -887,18 +927,99 @@
                     }
                 });
             } else {
-                 // Inicializa as 31 ruas na área "Ruas" na primeira carga
-                for (let i = 1; i <= 31; i++) {
-                    const nomeRua = `Rua ${i.toString().padStart(2, '0')}`;
-                    const vagaID = `ruas-${nomeRua.toLowerCase().replace(/\s/g, '-')}`;
-                    vagasEstoque['Ruas'].vagas[vagaID] = {
-                        id: vagaID,
-                        nomeRua: nomeRua,
-                        capacidade: 10, // Capacidade inicial de exemplo (Pode ser editada)
-                        itens: []
-                    };
-                    vagasEstoque['Ruas'].capacidadeTotal += 10;
-                }
+                // --- INICIALIZAÇÃO COM DADOS DA PLANILHA DO USUÁRIO ---
+                
+                // Dados extraídos e estruturados da planilha "Layout Padrão"
+                const dadosIniciaisPlanilha = [
+                    // Área: Ruas (1 a 31) - Exemplo de Estrutura Inicial (Capacidade: 10)
+                    { area: "Ruas", nomeRua: "Rua 01", capacidade: 10, codigo: "92993", quantidade: 8, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 02", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 03", capacidade: 10, codigo: "140365", quantidade: 5, lote: "2024-002", status: "Na fila do FIFO", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 04", capacidade: 10, codigo: "", quantidade: 0, lote: "", status: "Liberado", validade: "", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 05", capacidade: 10, codigo: "92970", quantidade: 10, lote: "2024-003", status: "Bloqueado QA", validade: "2026-01-01", observacao: "Aguardando inspeção de qualidade." },
+                    { area: "Ruas", nomeRua: "Rua 06", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 07", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 08", capacidade: 10, codigo: "140365", quantidade: 5, lote: "2024-002", status: "Na fila do FIFO", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 09", capacidade: 10, codigo: "", quantidade: 0, lote: "", status: "Liberado", validade: "", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 10", capacidade: 10, codigo: "92970", quantidade: 10, lote: "2024-003", status: "Bloqueado QA", validade: "2026-01-01", observacao: "Aguardando inspeção de qualidade." },
+                    { area: "Ruas", nomeRua: "Rua 11", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 12", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 13", capacidade: 10, codigo: "140365", quantidade: 5, lote: "2024-002", status: "Na fila do FIFO", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 14", capacidade: 10, codigo: "", quantidade: 0, lote: "", status: "Liberado", validade: "", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 15", capacidade: 10, codigo: "92970", quantidade: 10, lote: "2024-003", status: "Bloqueado QA", validade: "2026-01-01", observacao: "Aguardando inspeção de qualidade." },
+                    { area: "Ruas", nomeRua: "Rua 16", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 17", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 18", capacidade: 10, codigo: "140365", quantidade: 5, lote: "2024-002", status: "Na fila do FIFO", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 19", capacidade: 10, codigo: "", quantidade: 0, lote: "", status: "Liberado", validade: "", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 20", capacidade: 10, codigo: "92970", quantidade: 10, lote: "2024-003", status: "Bloqueado QA", validade: "2026-01-01", observacao: "Aguardando inspeção de qualidade." },
+                    { area: "Ruas", nomeRua: "Rua 21", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 22", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 23", capacidade: 10, codigo: "140365", quantidade: 5, lote: "2024-002", status: "Na fila do FIFO", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 24", capacidade: 10, codigo: "", quantidade: 0, lote: "", status: "Liberado", validade: "", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 25", capacidade: 10, codigo: "92970", quantidade: 10, lote: "2024-003", status: "Bloqueado QA", validade: "2026-01-01", observacao: "Aguardando inspeção de qualidade." },
+                    { area: "Ruas", nomeRua: "Rua 26", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 27", capacidade: 10, codigo: "92993", quantidade: 10, lote: "2024-001", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 28", capacidade: 10, codigo: "140365", quantidade: 5, lote: "2024-002", status: "Na fila do FIFO", validade: "2026-01-01", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 29", capacidade: 10, codigo: "", quantidade: 0, lote: "", status: "Liberado", validade: "", observacao: "" },
+                    { area: "Ruas", nomeRua: "Rua 30", capacidade: 10, codigo: "92970", quantidade: 10, lote: "2024-003", status: "Bloqueado QA", validade: "2026-01-01", observacao: "Aguardando inspeção de qualidade." },
+                    { area: "Ruas", nomeRua: "Rua 31", capacidade: 10, codigo: "", quantidade: 0, lote: "", status: "Liberado", validade: "", observacao: "" },
+                    
+                    // Área: Superboard (Área PB)
+                    { area: "Superboard", nomeRua: "Área PB 1", capacidade: 100, codigo: "142687", quantidade: 80, lote: "SB-2024-010", status: "Em cura", validade: "2026-01-01", observacao: "Em período de cura padrão" },
+                    { area: "Superboard", nomeRua: "Área PB 2", capacidade: 100, codigo: "142678", quantidade: 100, lote: "SB-2024-011", status: "Bloqueado", validade: "2026-01-01", observacao: "Bloqueado por desvio de cor." },
+                    
+                    // Área: Segregação
+                    { area: "Segregação", nomeRua: "Segregação 1", capacidade: 5, codigo: "4066970", quantidade: 1, lote: "2024-ACESS", status: "Liberado", validade: "", observacao: "Caixa de parafusos" },
+                    
+                    // Área: Pushback
+                    { area: "Pushback", nomeRua: "Pushback 1A", capacidade: 15, codigo: "93025", quantidade: 15, lote: "PB-2024-001", status: "Na fila do FIFO", validade: "2026-01-01", observacao: "" },
+                    { area: "Pushback", nomeRua: "Pushback 1B", capacidade: 15, codigo: "93025", quantidade: 10, lote: "PB-2024-002", status: "Liberado", validade: "2026-01-01", observacao: "" },
+                    
+                    // Área: Pezinho
+                    { area: "Pezinho", nomeRua: "Pezinho 01", capacidade: 1, codigo: "4577023", quantidade: 200, lote: "GS-2024-01", status: "Liberado", validade: "", observacao: "Gesso Reciclado (Kg)" },
+                ];
+
+
+                // Garante que todas as áreas iniciais existem
+                AREAS.forEach(area => {
+                    vagasEstoque[area] = { capacidadeTotal: 0, vagas: {} };
+                });
+
+                // Processa os dados iniciais
+                dadosIniciaisPlanilha.forEach(dados => {
+                    const areaNome = dados.area;
+                    const nomeRua = dados.nomeRua;
+                    
+                    if (!vagasEstoque[areaNome]) {
+                        // Isso garante que áreas não mapeadas inicialmente também sejam criadas se houver dados para elas.
+                        vagasEstoque[areaNome] = { capacidadeTotal: 0, vagas: {} };
+                    }
+                    
+                    const vagaID = areaNome.toLowerCase().replace(/\s/g, '-') + '-' + nomeRua.toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9-]/g, '');
+
+                    // Cria a vaga
+                    if (!vagasEstoque[areaNome].vagas[vagaID]) {
+                         vagasEstoque[areaNome].vagas[vagaID] = {
+                            id: vagaID,
+                            nomeRua: nomeRua,
+                            capacidade: dados.capacidade,
+                            itens: []
+                        };
+                         vagasEstoque[areaNome].capacidadeTotal += dados.capacidade;
+                    }
+                    
+                    // Adiciona o item (se houver código e quantidade)
+                    if (dados.codigo && dados.quantidade > 0) {
+                         vagasEstoque[areaNome].vagas[vagaID].itens.push({
+                            codigo: dados.codigo,
+                            quantidade: dados.quantidade,
+                            lote: dados.lote,
+                            validade: dados.validade,
+                            status: dados.status,
+                            observacao: dados.observacao
+                        });
+                    }
+                });
             }
         }
 
@@ -967,6 +1088,8 @@
                 <hr style="margin: 20px 0;">
                 
                 <h4>Itens na Vaga</h4>
+                <p style="font-size: 0.9em;">Se a vaga for para múltiplos produtos (Ex: Acessórios), preencha um item por código. A Vaga aparecerá na listagem com o *primeiro* item.</p>
+
                 <div id="campo-itens-container">
                     </div>
                 
