@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Etex STC - Sistema de Vagas de Estoque</title>
+    <style>
+        /* Estilos CSS (Cores: Laranja e Preto) */
+        :root {
+            --cor-principal: #FF8C00; /* Laranja Vívido */
+            --cor-secundaria: #1E1E1E; /* Preto Quase Total */
+            --cor-fundo: #F5F5F5; /* Fundo Claro para contraste */
+            --cor-texto: #FFFFFF; /* Texto em destaque */
+            --cor-texto-principal: #1E1E1E;
+            --cor-ocupado: #FFD700; /* Dourado/Amarelo para Ocupação */
+            --cor-vazio: #333333; /* Cinza Escuro para Vazio */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto-principal);
+        }
+
+        header {
+            background-color: var(--cor-secundaria);
+            color: var(--cor-texto);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--cor-principal);
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        /* --- Dashboard de Ocupação --- */
+        #dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card-dashboard {
+            background-color: var(--cor-secundaria);
+            color: var(--cor-texto);
+            padding: 15px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid var(--cor-principal);
+        }
+
+        .card-dashboard h3 {
+            margin-top: 0;
+            color: var(--cor-principal);
+            font-size: 1.1em;
+        }
+
+        .progress-bar-container {
+            background-color: var(--cor-vazio);
+            border-radius: 5px;
+            margin-top: 5px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--cor-principal);
+            text-align: right;
+            line-height: 20px;
+            color: var(--cor-secundaria);
+            font-weight: bold;
+            transition: width 0.5s ease-in-out;
+            padding-right: 5px;
+            box-sizing: border-box;
+        }
+
+        /* --- Layout de Áreas --- */
+        #layout-areas {
+            display: grid;
+            gap: 20px;
+        }
+
+        .area {
+            background-color: #ffffff;
+            border: 2px solid var(--cor-secundaria);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .area h2 {
+            color: var(--cor-principal);
+            border-bottom: 2px solid var(--cor-principal);
+            padding-bottom: 5px;
+            margin-top: 0;
+            cursor: pointer; /* Para indicar que é clicável (esconder/mostrar) */
+        }
+
+        .ruas-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Estilo da "Vaga" (Rua) */
+        .vaga {
+            background-color: var(--cor-vazio);
+            color: var(--cor-texto);
+            padding: 10px;
+            border-radius: 4px;
+            width: 150px;
+            border: 1px solid var(--cor-secundaria);
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .vaga.ocupada {
+            background-color: var(--cor-ocupado);
+            color: var(--cor-secundaria);
+            font-weight: bold;
+        }
+
+        .vaga:hover {
+            opacity: 0.9;
+        }
+
+        .vaga h4 {
+            margin: 0 0 5px 0;
+            font-size: 1em;
+        }
+
+        .vaga-info {
+            font-size: 0.8em;
+        }
+
+        /* --- Modal de Edição/Visualização --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: var(--cor-fundo);
+            margin: 10% auto;
+            padding: 20px;
+            border: 5px solid var(--cor-principal);
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            color: var(--cor-texto-principal);
+            position: relative;
+        }
+
+        .close-button {
+            color: var(--cor-secundaria);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--cor-principal);
+            text-decoration: none;
+        }
+
+        .modal-content h3 {
+            color: var(--cor-secundaria);
+            border-bottom: 2px solid var(--cor-principal);
+            padding-bottom: 5px;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .modal-content input,
+        .modal-content select,
+        .modal-content textarea {
+            width: 95%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .modal-content button {
+            background-color: var(--cor-principal);
+            color: var(--cor-texto);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .modal-content button:hover {
+            background-color: #CC7000;
+        }
+
+    </style>
+    <script>
+        // --- Base de Dados de Itens do Estoque (MOCKUP) ---
+        // VOCÊ DEVE PREENCHER ISSO COM SEUS DADOS REAIS!
+        const BASE_ITENS = {
+            "001PB180": { nome: "Painel PB 1,80m", tipo: "PB 1,80" },
+            "002ESPEC": { nome: "Painel Especial 15mm", tipo: "ESPECIAIS" },
+            "003MASSA": { nome: "Massa Corrida Premium", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "004FITA": { nome: "Fita Tira-Junta", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "005PARAF": { nome: "Parafuso Drywall 25mm", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "006MET": { nome: "Montante Metálico 70mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "007MANTA": { nome: "Manta Acústica 5mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "008LA": { nome: "Lã de Vidro 50mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            // Adicione mais itens aqui com o formato "CÓDIGO": { nome: "Nome do Material", tipo: "TIPO DE MATERIAL" }
+        };
+
+        // --- Estrutura de Vagas (Vazia) ---
+        // Capacidade e Ocupação são preenchidas no JS
+        let vagasEstoque = {};
+        
+        // Definição das Áreas e Vagas Iniciais
+        const AREAS = [
+            "Ruas", "Superboard", "Congelados", "Segregação", "OG",
+            "Quarentena", "Triagem", "Pushback", "Pezinho"
+        ];
+        
+        // Inicializa as vagas. Capacidade e Itens serão adicionados via modal/interface.
+        AREAS.forEach(area => {
+            vagasEstoque[area] = {
+                capacidadeTotal: 0,
+                vagas: {}
+            };
+        });
+
+        // Função para calcular o % de ocupação do estoque
+        function calcularOcupacaoGeral() {
+            let totalCapacidade = 0;
+            let totalOcupado = 0;
+
+            for (const area in vagasEstoque) {
+                totalCapacidade += vagasEstoque[area].capacidadeTotal;
+                
+                // Soma a ocupação real de cada vaga dentro da área
+                for (const vagaID in vagasEstoque[area].vagas) {
+                    const vaga = vagasEstoque[area].vagas[vagaID];
+                    if (vaga.itens.length > 0) {
+                        totalOcupado += 1; // Contagem simples por vaga ocupada
+                    }
+                }
+            }
+
+            const percentual = totalCapacidade > 0 ? (totalOcupado / totalCapacidade) * 100 : 0;
+            const vagasLivres = totalCapacidade - totalOcupado;
+
+            // Atualiza o Dashboard
+            document.getElementById('total-ocupacao').textContent = `${percentual.toFixed(1)}% (${totalOcupado} de ${totalCapacidade} Vagas)`;
+            document.getElementById('progress-geral').style.width = `${percentual}%`;
+            document.getElementById('vagas-livres').textContent = `${vagasLivres} Vagas Livres`;
+
+            return { totalCapacidade, totalOcupado };
+        }
+
+        // Função para calcular o % por tipo de material
+        function calcularOcupacaoMaterial() {
+            const contagemMaterial = {};
+            const tiposMaterial = [
+                "PB 1,80", "ESPECIAIS", "REVENDA (MASSAS, FITAS E PARAFUSOS)", "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)"
+            ];
+
+            tiposMaterial.forEach(tipo => contagemMaterial[tipo] = 0);
+            
+            let totalItens = 0;
+
+            for (const area in vagasEstoque) {
+                for (const vagaID in vagasEstoque[area].vagas) {
+                    const vaga = vagasEstoque[area].vagas[vagaID];
+                    vaga.itens.forEach(item => {
+                        const infoItem = BASE_ITENS[item.codigo];
+                        if (infoItem && tiposMaterial.includes(infoItem.tipo)) {
+                            contagemMaterial[infoItem.tipo] += item.quantidade || 0;
+                            totalItens += item.quantidade || 0;
+                        }
+                    });
+                }
+            }
+
+            const dashboardMaterial = document.getElementById('dashboard-material');
+            dashboardMaterial.innerHTML = '<h3>% por Tipo de Material (em Qtd.)</h3>';
+
+            tiposMaterial.forEach(tipo => {
+                const qtd = contagemMaterial[tipo];
+                const percentual = totalItens > 0 ? (qtd / totalItens) * 100 : 0;
+                
+                const card = document.createElement('div');
+                card.className = 'card-dashboard';
+                card.innerHTML = `
+                    <h4>${tipo}</h4>
+                    <p>Qtd: ${qtd} | ${percentual.toFixed(1)}%</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${percentual.toFixed(1)}%; background-color: var(--cor-ocupado);"></div>
+                    </div>
+                `;
+                dashboardMaterial.appendChild(card);
+            });
+        }
+
+
+        // Função para renderizar o layout das áreas e vagas
+        function renderizarLayout() {
+            const container = document.getElementById('layout-areas');
+            container.innerHTML = ''; // Limpa o container
+
+            AREAS.forEach(areaNome => {
+                const areaDiv = document.createElement('div');
+                areaDiv.className = 'area';
+                areaDiv.innerHTML = `<h2 onclick="toggleArea('${areaNome}')">${areaNome} (Capacidade: ${vagasEstoque[areaNome].capacidadeTotal} Vagas)</h2>`;
+
+                const ruasContainer = document.createElement('div');
+                ruasContainer.id = `ruas-${areaNome.toLowerCase().replace(/\s/g, '-')}`;
+                ruasContainer.className = 'ruas-container';
+
+                // Adicionar botão de 'Criar Vaga/Rua'
+                const btnCriarVaga = document.createElement('button');
+                btnCriarVaga.textContent = `+ Criar Vaga/Rua em ${areaNome}`;
+                btnCriarVaga.onclick = () => abrirModalNovaVaga(areaNome);
+                btnCriarVaga.style.backgroundColor = '#666';
+                btnCriarVaga.style.color = 'white';
+                btnCriarVaga.style.border = 'none';
+                btnCriarVaga.style.padding = '8px 12px';
+                btnCriarVaga.style.borderRadius = '4px';
+                btnCriarVaga.style.cursor = 'pointer';
+                btnCriarVaga.style.marginBottom = '10px';
+                btnCriarVaga.style.marginRight = '10px';
+
+                areaDiv.appendChild(btnCriarVaga);
+                areaDiv.appendChild(ruasContainer);
+
+
+                // Renderiza as vagas existentes
+                const vagasArea = vagasEstoque[areaNome].vagas;
+                for (const vagaID in vagasArea) {
+                    const vaga = vagasArea[vagaID];
+                    const vagaDiv = document.createElement('div');
+                    vagaDiv.className = `vaga ${vaga.itens.length > 0 ? 'ocupada' : ''}`;
+                    vagaDiv.id = vagaID;
+                    vagaDiv.onclick = () => abrirModalVaga(vagaID, vaga);
+                    
+                    let resumoItem = 'Vaga Vazia';
+                    if (vaga.itens.length > 0) {
+                        const itemPrincipal = vaga.itens[0];
+                        const info = BASE_ITENS[itemPrincipal.codigo] || { nome: 'Item Desconhecido' };
+                        resumoItem = `${info.nome} - Qtd: ${itemPrincipal.quantidade} - Status: ${itemPrincipal.status}`;
+                    }
+
+                    vagaDiv.innerHTML = `
+                        <h4>${vaga.nomeRua}</h4>
+                        <div class="vaga-info">
+                            <p>${resumoItem}</p>
+                            <p>Capacidade: ${vaga.capacidade}</p>
+                        </div>
+                    `;
+                    ruasContainer.appendChild(vagaDiv);
+                }
+
+                container.appendChild(areaDiv);
+            });
+            
+            // Recalcula o dashboard após a renderização
+            calcularOcupacaoGeral();
+            calcularOcupacaoMaterial();
+            salvarVagas();
+        }
+
+        // Função para mostrar/esconder o conteúdo da área
+        function toggleArea(areaNome) {
+            const ruasContainer = document.getElementById(`ruas-${areaNome.toLowerCase().replace(/\s/g, '-')}`);
+            ruasContainer.style.display = ruasContainer.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // --- Funções do Modal (Nova Vaga) ---
+        function abrirModalNovaVaga(areaNome) {
+            const modal = document.getElementById('modal-vaga');
+            const titulo = document.getElementById('modal-vaga-titulo');
+            const form = document.getElementById('form-vaga');
+            
+            titulo.textContent = `Criar Nova Vaga/Rua em ${areaNome}`;
+            document.getElementById('vaga-id').value = '';
+            document.getElementById('campo-nome-rua').value = '';
+            document.getElementById('campo-capacidade').value = 1; // Capacidade padrão
+            document.getElementById('area-associada').value = areaNome;
+            document.getElementById('campo-itens-container').innerHTML = '';
+            document.getElementById('btn-adicionar-item').style.display = 'none'; // Esconde para nova vaga
+            document.getElementById('btn-remover-vaga').style.display = 'none';
+
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                salvarNovaVaga();
+            };
+            modal.style.display = 'block';
+        }
+
+        function salvarNovaVaga() {
+            const areaNome = document.getElementById('area-associada').value;
+            const nomeRua = document.getElementById('campo-nome-rua').value;
+            const capacidade = parseInt(document.getElementById('campo-capacidade').value);
+            const vagaID = areaNome.toLowerCase().replace(/\s/g, '-') + '-' + nomeRua.toLowerCase().replace(/\s/g, '-');
+            
+            if (vagasEstoque[areaNome].vagas[vagaID]) {
+                alert('Vaga/Rua com este nome já existe nesta área!');
+                return;
+            }
+
+            vagasEstoque[areaNome].vagas[vagaID] = {
+                id: vagaID,
+                nomeRua: nomeRua,
+                capacidade: capacidade,
+                itens: [] // Vaga nova começa vazia
+            };
+
+            vagasEstoque[areaNome].capacidadeTotal += capacidade;
+            
+            fecharModal();
+            renderizarLayout();
+        }
+
+        // --- Funções do Modal (Edição/Preenchimento de Vaga) ---
+        function abrirModalVaga(vagaID, vaga) {
+            const modal = document.getElementById('modal-vaga');
+            const titulo = document.getElementById('modal-vaga-titulo');
+            const form = document.getElementById('form-vaga');
+            
+            titulo.textContent = `Vaga/Rua: ${vaga.nomeRua}`;
+            document.getElementById('vaga-id').value = vagaID;
+            document.getElementById('campo-nome-rua').value = vaga.nomeRua;
+            document.getElementById('campo-capacidade').value = vaga.capacidade;
+            document.getElementById('area-associada').value = Object.keys(vagasEstoque).find(area => vagasEstoque[area].vagas[vagaID]);
+            document.getElementById('btn-adicionar-item').style.display = 'inline-block';
+            document.getElementById('btn-remover-vaga').style.display = 'inline-block';
+            document.getElementById('btn-remover-vaga').onclick = () => removerVaga(vagaID);
+
+            renderizarItensModal(vaga.itens);
+
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                salvarVagaEditada(vagaID);
+            };
+            modal.style.display = 'block';
+        }
+        
+        function removerVaga(vagaID) {
+            if (!confirm("Tem certeza que deseja remover esta vaga? Todos os itens serão perdidos.")) {
+                return;
+            }
+            
+            const areaNome = Object.keys(vagasEstoque).find(area => vagasEstoque[area].vagas[vagaID]);
+            if (areaNome) {
+                const capacidadeRemovida = vagasEstoque[areaNome].vagas[vagaID].capacidade;
+                delete vagasEstoque[areaNome].vagas[vagaID];
+                vagasEstoque[areaNome].capacidadeTotal -= capacidadeRemovida;
+                fecharModal();
+                renderizarLayout();
+            }
+        }
+
+        function salvarVagaEditada(vagaID) {
+            const areaNome = document.getElementById('area-associada').value;
+            const vaga = vagasEstoque[areaNome].vagas[vagaID];
+            
+            const novaCapacidade = parseInt(document.getElementById('campo-capacidade').value);
+            const nomeRua = document.getElementById('campo-nome-rua').value;
+
+            // Atualiza a capacidade total da área
+            vagasEstoque[areaNome].capacidadeTotal -= vaga.capacidade;
+            vagasEstoque[areaNome].capacidadeTotal += novaCapacidade;
+
+            // Atualiza a vaga
+            vaga.capacidade = novaCapacidade;
+            vaga.nomeRua = nomeRua;
+            
+            // Reconstroi a lista de itens do formulário
+            const itensContainer = document.getElementById('campo-itens-container');
+            const itensForms = itensContainer.querySelectorAll('.item-form');
+            const novosItens = [];
+
+            itensForms.forEach(itemForm => {
+                const item = {};
+                item.codigo = itemForm.querySelector('.item-codigo').value;
+                item.quantidade = parseFloat(itemForm.querySelector('.item-quantidade').value) || 0;
+                item.lote = itemForm.querySelector('.item-lote').value;
+                item.validade = itemForm.querySelector('.item-validade').value;
+                item.status = itemForm.querySelector('.item-status').value;
+                item.observacao = itemForm.querySelector('.item-observacao').value;
+
+                if (item.codigo) {
+                    novosItens.push(item);
+                }
+            });
+
+            vaga.itens = novosItens;
+            
+            fecharModal();
+            renderizarLayout();
+        }
+
+        function renderizarItensModal(itens) {
+            const container = document.getElementById('campo-itens-container');
+            container.innerHTML = '';
+            
+            if (itens.length === 0) {
+                container.innerHTML = '<p>Nenhum item nesta vaga.</p>';
+            }
+
+            itens.forEach((item, index) => {
+                const itemDiv = criarFormItem(index, item);
+                container.appendChild(itemDiv);
+            });
+        }
+        
+        function adicionarItem() {
+            const container = document.getElementById('campo-itens-container');
+            const novoIndex = container.querySelectorAll('.item-form').length;
+            const novoItemDiv = criarFormItem(novoIndex, { 
+                codigo: '', quantidade: 0, lote: '', validade: '', status: 'Liberado', observacao: '' 
+            });
+            container.appendChild(novoItemDiv);
+            
+            // Remove a mensagem de "Nenhum item" se existir
+            const msgVazio = container.querySelector('p');
+            if (msgVazio && msgVazio.textContent === 'Nenhum item nesta vaga.') {
+                msgVazio.remove();
+            }
+        }
+
+        function criarFormItem(index, item) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item-form';
+            itemDiv.style.border = '1px dashed #ccc';
+            itemDiv.style.padding = '10px';
+            itemDiv.style.marginTop = '15px';
+            itemDiv.id = `item-form-${index}`;
+            
+            const nomeMaterial = BASE_ITENS[item.codigo] ? BASE_ITENS[item.codigo].nome : 'Nome do Material (Desconhecido)';
+            
+            itemDiv.innerHTML = `
+                <h4>Item ${index + 1}: ${nomeMaterial}</h4>
+                <label>Código:</label>
+                <input type="text" class="item-codigo" value="${item.codigo}" onchange="atualizarNomeMaterial(this, ${index})" required>
+
+                <label>Nome do Material (Automático):</label>
+                <input type="text" class="item-nome-material" value="${nomeMaterial}" disabled>
+                
+                <label>Quantidade (Un/Pallets/Kg):</label>
+                <input type="number" step="any" class="item-quantidade" value="${item.quantidade}" required>
+                
+                <label>Lote:</label>
+                <input type="text" class="item-lote" value="${item.lote}">
+                
+                <label>Validade:</label>
+                <input type="date" class="item-validade" value="${item.validade}">
+                
+                <label>Status:</label>
+                <select class="item-status" required>
+                    <option value="Liberado" ${item.status === 'Liberado' ? 'selected' : ''}>Liberado</option>
+                    <option value="Na fila do FIFO" ${item.status === 'Na fila do FIFO' ? 'selected' : ''}>Na fila do FIFO</option>
+                    <option value="Bloqueado" ${item.status === 'Bloqueado' ? 'selected' : ''}>Bloqueado</option>
+                    <option value="Bloqueado QA" ${item.status === 'Bloqueado QA' ? 'selected' : ''}>Bloqueado QA</option>
+                    <option value="Em cura" ${item.status === 'Em cura' ? 'selected' : ''}>Em cura</option>
+                </select>
+                
+                <label>Observação:</label>
+                <textarea class="item-observacao">${item.observacao}</textarea>
+                
+                <button type="button" onclick="removerItem(${index})" style="background-color: #CC0000; margin-top: 10px;">Remover Item</button>
+            `;
+            return itemDiv;
+        }
+
+        function atualizarNomeMaterial(inputElement, index) {
+            const codigo = inputElement.value.toUpperCase();
+            const itemInfo = BASE_ITENS[codigo];
+            const itemDiv = document.getElementById(`item-form-${index}`);
+            
+            let nome = 'Nome do Material (Desconhecido)';
+            if (itemInfo) {
+                nome = itemInfo.nome;
+            }
+            
+            itemDiv.querySelector('.item-nome-material').value = nome;
+            itemDiv.querySelector('h4').textContent = `Item ${index + 1}: ${nome}`;
+        }
+        
+        function removerItem(index) {
+            const container = document.getElementById('campo-itens-container');
+            const itemParaRemover = document.getElementById(`item-form-${index}`);
+            if (itemParaRemover) {
+                itemParaRemover.remove();
+            }
+            
+            // Se ficar vazio, adiciona a mensagem
+            if (container.querySelectorAll('.item-form').length === 0) {
+                 container.innerHTML = '<p>Nenhum item nesta vaga.</p>';
+            }
+        }
+
+
+        function fecharModal() {
+            document.getElementById('modal-vaga').style.display = 'none';
+        }
+
+        // --- Persistência de Dados (Local Storage) ---
+        function salvarVagas() {
+            localStorage.setItem('layoutEtexSTC', JSON.stringify(vagasEstoque));
+        }
+
+        function carregarVagas() {
+            const dadosSalvos = localStorage.getItem('layoutEtexSTC');
+            if (dadosSalvos) {
+                vagasEstoque = JSON.parse(dadosSalvos);
+                // Garante que todas as áreas estão na estrutura, mesmo que novas áreas sejam adicionadas
+                AREAS.forEach(area => {
+                    if (!vagasEstoque[area]) {
+                        vagasEstoque[area] = { capacidadeTotal: 0, vagas: {} };
+                    }
+                });
+            } else {
+                 // Inicializa as 31 ruas na área "Ruas" na primeira carga
+                for (let i = 1; i <= 31; i++) {
+                    const nomeRua = `Rua ${i.toString().padStart(2, '0')}`;
+                    const vagaID = `ruas-${nomeRua.toLowerCase().replace(/\s/g, '-')}`;
+                    vagasEstoque['Ruas'].vagas[vagaID] = {
+                        id: vagaID,
+                        nomeRua: nomeRua,
+                        capacidade: 10, // Capacidade inicial de exemplo
+                        itens: []
+                    };
+                    vagasEstoque['Ruas'].capacidadeTotal += 10;
+                }
+            }
+        }
+
+
+        // --- Inicialização ---
+        window.onload = () => {
+            carregarVagas();
+            renderizarLayout();
+
+            // Configura o botão de fechar do modal
+            document.querySelector('.close-button').onclick = fecharModal;
+            window.onclick = (event) => {
+                const modal = document.getElementById('modal-vaga');
+                if (event.target === modal) {
+                    fecharModal();
+                }
+            };
+        };
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>Layout Etex STC</h1>
+        <p>Sistema de Vagas e Ocupação de Estoque</p>
+    </header>
+
+    <main>
+        
+        <section id="dashboard">
+            <div class="card-dashboard">
+                <h3>Ocupação Geral do Estoque</h3>
+                <p id="total-ocupacao">0% (0 de 0 Vagas)</p>
+                <div class="progress-bar-container">
+                    <div id="progress-geral" class="progress-bar" style="width: 0%;"></div>
+                </div>
+                <p id="vagas-livres" style="font-size: 0.9em; margin-top: 10px;">0 Vagas Livres</p>
+            </div>
+            
+            <div id="dashboard-material" style="display: flex; flex-wrap: wrap; gap: 20px; flex-grow: 3;">
+                </div>
+        </section>
+
+        <hr>
+
+        <section id="layout-areas">
+            </section>
+
+    </main>
+    
+    <div id="modal-vaga" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modal-vaga-titulo">Vaga/Rua</h3>
+            
+            <form id="form-vaga">
+                <input type="hidden" id="vaga-id">
+                <input type="hidden" id="area-associada">
+                
+                <label for="campo-nome-rua">Nome da Vaga/Rua:</label>
+                <input type="text" id="campo-nome-rua" required>
+                
+                <label for="campo-capacidade">Capacidade (Unidades/Pallets de Vaga):</label>
+                <input type="number" id="campo-capacidade" min="1" required>
+
+                <hr style="margin: 20px 0;">
+                
+                <h4>Itens na Vaga</h4>
+                <div id="campo-itens-container">
+                    </div>
+                
+                <button type="button" id="btn-adicionar-item" onclick="adicionarItem()">+ Adicionar Item</button>
+                <button type="button" id="btn-remover-vaga" style="background-color: #CC0000;">Remover Vaga</button>
+                <button type="submit">Salvar Vaga</button>
+                
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
