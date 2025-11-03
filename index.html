@@ -224,19 +224,65 @@
 
     </style>
     <script>
-        // --- Base de Dados de Itens do Estoque (MOCKUP) ---
-        // VOCÊ DEVE PREENCHER ISSO COM SEUS DADOS REAIS!
+        // --- Base de Dados de Itens do Estoque (ATUALIZADA) ---
+        // CLASSIFICADA COM BASE NA SUA IMAGEM E CATEGORIAS SOLICITADAS.
         const BASE_ITENS = {
-            "001PB180": { nome: "Painel PB 1,80m", tipo: "PB 1,80" },
-            "002ESPEC": { nome: "Painel Especial 15mm", tipo: "ESPECIAIS" },
-            "003MASSA": { nome: "Massa Corrida Premium", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "004FITA": { nome: "Fita Tira-Junta", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "005PARAF": { nome: "Parafuso Drywall 25mm", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "006MET": { nome: "Montante Metálico 70mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "007MANTA": { nome: "Manta Acústica 5mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "008LA": { nome: "Lã de Vidro 50mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            // Adicione mais itens aqui com o formato "CÓDIGO": { nome: "Nome do Material", tipo: "TIPO DE MATERIAL" }
+            // --- PB 1,80 (Painéis) ---
+            "001PB180": { nome: "Painel Standard PB 1,80m", tipo: "PB 1,80" },
+            "002PB180RU": { nome: "Painel RU (Resistente à Umidade) 1,80m", tipo: "PB 1,80" },
+            "003PB180RF": { nome: "Painel RF (Resistente ao Fogo) 1,80m", tipo: "PB 1,80" },
+            "10091": { nome: "PLACA ST STANDARD 12,50MM", tipo: "PB 1,80" },
+            "10092": { nome: "PLACA RU RESISTENTE A UMIDADE 12,50MM", tipo: "PB 1,80" },
+            "10093": { nome: "PLACA RF RESISTENTE A FOGO 12,50MM", tipo: "PB 1,80" },
+
+            // --- ESPECIAIS (Painéis com especificações/tamanhos/tipos diferenciados) ---
+            "200ESPEC15": { nome: "Painel Standard 15mm", tipo: "ESPECIAIS" },
+            "200ESPEC19": { nome: "Painel Standard 19mm", tipo: "ESPECIAIS" },
+            "20094": { nome: "PLACA ST STANDARD 15,00MM", tipo: "ESPECIAIS" },
+            "20095": { nome: "PLACA RU RESISTENTE A UMIDADE 15,00MM", tipo: "ESPECIAIS" },
+            "20096": { nome: "PLACA RF RESISTENTE A FOGO 15,00MM", tipo: "ESPECIAIS" },
+            "300SUPER": { nome: "Placa Superboard (Cimentícia)", tipo: "ESPECIAIS" },
+            "300CHAPA": { nome: "Chapa de Fibra-Cimento", tipo: "ESPECIAIS" },
+            "300FACHADA": { nome: "Placa para Fachada (Externa)", tipo: "ESPECIAIS" },
+            "300PRIME": { nome: "Painel Acústico GypPrime", tipo: "ESPECIAIS" },
+
+            // --- REVENDA (MASSAS, FITAS E PARAFUSOS) ---
+            "400MASSA": { nome: "Massa para Tratamento de Juntas", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "401FITA": { nome: "Fita de Papel Microperfurada", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "402PARAF": { nome: "Parafuso Drywall TA 25mm", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "403PARAF35": { nome: "Parafuso Drywall TA 35mm", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "404MASSA25": { nome: "Massa de Acabamento 25KG", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "405PARAFGU": { nome: "Parafuso Gyp-Fix LA 9,5mm", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "406FITARED": { nome: "Fita Tira-Junta Telada (Vermelha)", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "5001": { nome: "MASSA READYMIX BALDE 25KG", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "5002": { nome: "FITA DE PAPEL TRATAMENTO DE JUNTAS", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "5003": { nome: "PARAFUSO TA 25MM", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "5004": { nome: "PARAFUSO LA 9,5MM", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "5005": { nome: "PARAFUSO AUTOATARRAXANTE", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            "5006": { nome: "MASSA EM PÓ SACO 20KG", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+
+            // --- ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ) ---
+            "600MONT70": { nome: "Montante Estrutural 70mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "601GUIA70": { nome: "Guia Estrutural 70mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "602CANTA": { nome: "Cantoneira de Acabamento CL-25", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "603PERFILF530": { nome: "Perfil F-530 para Forro", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "604REGULADOR": { nome: "Regulador para Forro (Metálico)", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "605MANTA": { nome: "Manta Acústica de Borracha (Rolo)", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "606LA": { nome: "Lã de Vidro 50mm - Rolo", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "607LA100": { nome: "Lã de Vidro 100mm - Placa", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "608VEDA": { nome: "Fita de Vedação em Espuma", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "7001": { nome: "MONTANTE ESTRUTURAL 70MM", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "7002": { nome: "GUIA ESTRUTURAL 70MM", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "7003": { nome: "PERFIL F530 3M", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "7004": { nome: "CANELETA SIMPLES", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+            "7005": { nome: "LÃ DE ROCHA 50MM", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
+
+            // --- OUTROS (Itens que não se encaixam nas 4 categorias principais) ---
+            "800SILICONE": { nome: "Silicone Selante Neutro", tipo: "OUTROS (Itens Diversos)" },
+            "801TELA": { nome: "Tela para Reforço de Revestimento", tipo: "OUTROS (Itens Diversos)" },
+            "802APLICA": { nome: "Aplicador de Massa (Ferramenta)", tipo: "OUTROS (Itens Diversos)" },
         };
+        // FIM DA BASE DE DADOS DE ITENS
 
         // --- Estrutura de Vagas (Vazia) ---
         // Capacidade e Ocupação são preenchidas no JS
@@ -288,12 +334,12 @@
         function calcularOcupacaoMaterial() {
             const contagemMaterial = {};
             const tiposMaterial = [
-                "PB 1,80", "ESPECIAIS", "REVENDA (MASSAS, FITAS E PARAFUSOS)", "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)"
+                "PB 1,80", "ESPECIAIS", "REVENDA (MASSAS, FITAS E PARAFUSOS)", "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)", "OUTROS (Itens Diversos)"
             ];
 
             tiposMaterial.forEach(tipo => contagemMaterial[tipo] = 0);
             
-            let totalItens = 0;
+            let totalItens = 0; // Contagem total de quantidades (Un/Pallets/Kg)
 
             for (const area in vagasEstoque) {
                 for (const vagaID in vagasEstoque[area].vagas) {
@@ -301,7 +347,8 @@
                     vaga.itens.forEach(item => {
                         const infoItem = BASE_ITENS[item.codigo];
                         if (infoItem && tiposMaterial.includes(infoItem.tipo)) {
-                            contagemMaterial[infoItem.tipo] += item.quantidade || 0;
+                            // Soma a quantidade (Un/Pallets/Kg)
+                            contagemMaterial[infoItem.tipo] += item.quantidade || 0; 
                             totalItens += item.quantidade || 0;
                         }
                     });
@@ -311,15 +358,19 @@
             const dashboardMaterial = document.getElementById('dashboard-material');
             dashboardMaterial.innerHTML = '<h3>% por Tipo de Material (em Qtd.)</h3>';
 
-            tiposMaterial.forEach(tipo => {
+            // Garante que o card "OUTROS" também seja exibido se necessário
+            const tiposParaExibir = tiposMaterial.filter(tipo => tipo !== "OUTROS (Itens Diversos)" || contagemMaterial[tipo] > 0 || totalItens === 0);
+
+
+            tiposParaExibir.forEach(tipo => {
                 const qtd = contagemMaterial[tipo];
                 const percentual = totalItens > 0 ? (qtd / totalItens) * 100 : 0;
                 
                 const card = document.createElement('div');
                 card.className = 'card-dashboard';
                 card.innerHTML = `
-                    <h4>${tipo}</h4>
-                    <p>Qtd: ${qtd} | ${percentual.toFixed(1)}%</p>
+                    <h4>${tipo.split(' (')[0]}</h4>
+                    <p>Qtd: ${qtd.toFixed(1)} | ${percentual.toFixed(1)}%</p>
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: ${percentual.toFixed(1)}%; background-color: var(--cor-ocupado);"></div>
                     </div>
@@ -373,7 +424,7 @@
                     if (vaga.itens.length > 0) {
                         const itemPrincipal = vaga.itens[0];
                         const info = BASE_ITENS[itemPrincipal.codigo] || { nome: 'Item Desconhecido' };
-                        resumoItem = `${info.nome} - Qtd: ${itemPrincipal.quantidade} - Status: ${itemPrincipal.status}`;
+                        resumoItem = `${info.nome.split(' ')[0]}... - Qtd: ${itemPrincipal.quantidade} - Status: ${itemPrincipal.status}`;
                     }
 
                     vagaDiv.innerHTML = `
@@ -398,7 +449,12 @@
         // Função para mostrar/esconder o conteúdo da área
         function toggleArea(areaNome) {
             const ruasContainer = document.getElementById(`ruas-${areaNome.toLowerCase().replace(/\s/g, '-')}`);
-            ruasContainer.style.display = ruasContainer.style.display === 'flex' ? 'none' : 'flex';
+            // Alterna o estado de exibição
+            if (ruasContainer.style.display === 'flex') {
+                ruasContainer.style.display = 'none';
+            } else {
+                 ruasContainer.style.display = 'flex';
+            }
         }
 
         // --- Funções do Modal (Nova Vaga) ---
@@ -427,7 +483,7 @@
             const areaNome = document.getElementById('area-associada').value;
             const nomeRua = document.getElementById('campo-nome-rua').value;
             const capacidade = parseInt(document.getElementById('campo-capacidade').value);
-            const vagaID = areaNome.toLowerCase().replace(/\s/g, '-') + '-' + nomeRua.toLowerCase().replace(/\s/g, '-');
+            const vagaID = areaNome.toLowerCase().replace(/\s/g, '-') + '-' + nomeRua.toLowerCase().replace(/\s/g, '-').replace(/[^a-z0-9-]/g, ''); // Limpa caracteres especiais
             
             if (vagasEstoque[areaNome].vagas[vagaID]) {
                 alert('Vaga/Rua com este nome já existe nesta área!');
@@ -508,7 +564,7 @@
 
             itensForms.forEach(itemForm => {
                 const item = {};
-                item.codigo = itemForm.querySelector('.item-codigo').value;
+                item.codigo = itemForm.querySelector('.item-codigo').value.toUpperCase(); // Garante o código em maiúsculas
                 item.quantidade = parseFloat(itemForm.querySelector('.item-quantidade').value) || 0;
                 item.lote = itemForm.querySelector('.item-lote').value;
                 item.validade = itemForm.querySelector('.item-validade').value;
@@ -563,7 +619,7 @@
             itemDiv.style.marginTop = '15px';
             itemDiv.id = `item-form-${index}`;
             
-            const nomeMaterial = BASE_ITENS[item.codigo] ? BASE_ITENS[item.codigo].nome : 'Nome do Material (Desconhecido)';
+            const nomeMaterial = BASE_ITENS[item.codigo.toUpperCase()] ? BASE_ITENS[item.codigo.toUpperCase()].nome : 'Nome do Material (Desconhecido)';
             
             itemDiv.innerHTML = `
                 <h4>Item ${index + 1}: ${nomeMaterial}</h4>
@@ -654,7 +710,7 @@
                     vagasEstoque['Ruas'].vagas[vagaID] = {
                         id: vagaID,
                         nomeRua: nomeRua,
-                        capacidade: 10, // Capacidade inicial de exemplo
+                        capacidade: 10, // Capacidade inicial de exemplo (Pode ser editada)
                         itens: []
                     };
                     vagasEstoque['Ruas'].capacidadeTotal += 10;
