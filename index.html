@@ -224,63 +224,249 @@
 
     </style>
     <script>
-        // --- Base de Dados de Itens do Estoque (ATUALIZADA) ---
-        // CLASSIFICADA COM BASE NA SUA IMAGEM E CATEGORIAS SOLICITADAS.
+        // --- Base de Dados de Itens do Estoque (ATUALIZADA E COMPLETA) ---
+        // CLASSIFICADA COM BASE NO PDF FORNECIDO PELO USUÁRIO.
         const BASE_ITENS = {
-            // --- PB 1,80 (Painéis) ---
-            "001PB180": { nome: "Painel Standard PB 1,80m", tipo: "PB 1,80" },
-            "002PB180RU": { nome: "Painel RU (Resistente à Umidade) 1,80m", tipo: "PB 1,80" },
-            "003PB180RF": { nome: "Painel RF (Resistente ao Fogo) 1,80m", tipo: "PB 1,80" },
-            "10091": { nome: "PLACA ST STANDARD 12,50MM", tipo: "PB 1,80" },
-            "10092": { nome: "PLACA RU RESISTENTE A UMIDADE 12,50MM", tipo: "PB 1,80" },
-            "10093": { nome: "PLACA RF RESISTENTE A FOGO 12,50MM", tipo: "PB 1,80" },
+            
+            // ===========================================
+            // 1. PLACAS DE GESSO (STANDARD, RU, RF, TOP)
+            // ===========================================
+            // Placas 12,5mm (ST - Standard)
+            "92983": { nome: "CH V GYP ST BR12,5-120X180", tipo: "PLACA DE GESSO (ST/RU/RF)" }, 
+            "92986": { nome: "CH V GYP ST BR12,5-120X200", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94443": { nome: "CH V GYP ST BR12,5-120X200 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92989": { nome: "CH V GYP ST BR12,5-120X220", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94444": { nome: "CH V GYP ST BR12,5-120X220 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92991": { nome: "CH V GYP ST BR12,5-120X225", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92992": { nome: "CH V GYP ST BR12,5-120X230", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "294723": { nome: "CH V GYP ST BR12,5-120X230 OG", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92993": { nome: "CH V GYP ST BR12.5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92999": { nome: "CH V GYP ST BR12,5-120X250", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93003": { nome: "CH V GYP ST BR12,5-120X255", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "175304": { nome: "CH V GYP ST BR12,5-120X255 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93008": { nome: "CH V GYP ST BR12,5-120X260", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94458": { nome: "CH V GYP ST BR12,5-120X260 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93009": { nome: "CH V GYP ST BR12,5-120X261", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94460": { nome: "CH V GYP ST BR12,5-120X261 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "259325": { nome: "CH V GYP ST BR12,5-120X262 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93012": { nome: "CH V GYP ST BR12,5-120X264", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93013": { nome: "CH V GYP ST BR12,5-120X265", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93014": { nome: "CH V GYP ST BR12,5-120X266", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93018": { nome: "CH V GYP ST BR12,5-120X270", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94461": { nome: "CH V GYP ST BR12,5-120X270 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140462": { nome: "CH V GYP ST BR12,5-120X271", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "145875": { nome: "CH V GYP ST BR12,5-120X271(OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "95763": { nome: "CH V GYP ST BR12,5-120X269 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93022": { nome: "CH V GYP ST BR12,5-120X275", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93025": { nome: "CH V GYP ST BR12,5-120X280", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94462": { nome: "CH V GYP ST BR12,5-120X280 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "175310": { nome: "CH V GYP ST BR12,5-120X285(OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93031": { nome: "CH V GYP ST BR12,5-120X290", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94463": { nome: "CH V GYP ST BR12,5-120X290 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "163301": { nome: "CH V GYP ST BR12,5-120X292 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "302412": { nome: "CH V GYP ST BR12,5-120X298", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "93035": { nome: "CH V GYP ST BR12,5-120X300", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94474": { nome: "CH V GYP ST BR12,5-120X300 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            
+            // Placas 15,0mm (ST - Standard)
+            "140373": { nome: "CH V GYP RF BR15-120X180", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140463": { nome: "CH V GYP ST BR15,0-120X180", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "165700": { nome: "CH V GYP ST BR15,0-120X180 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140371": { nome: "CH V GYP ST BR15,0-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "167801": { nome: "CH V GYP ST BR15,0-120X240(OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "158405": { nome: "CH V GYP ST BR15,0-120X260", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "175306": { nome: "CH V GYP ST BR15,0-120X260(OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "143720": { nome: "CH V GYP ST BR15,0-120X271", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "163225": { nome: "CH V GYP ST BR15,0-120X271 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "281635": { nome: "CH V GYP ST BR15,0-120X270", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "213619": { nome: "CH V GYP ST BR15,0-120X300", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "300659": { nome: "CH V GYP ST15,0-120X300 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            
+            // Placas (RU - Resistente à Umidade)
+            "92939": { nome: "CH V GYP RU BR12,5-120X180", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94476": { nome: "CH V GYP RU BR12,5-120X180 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92940": { nome: "CH V GYP RU BR12,5-120X200", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94478": { nome: "CH V GYP RU BR12,5-120X200 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94172": { nome: "CH V GYP RU BR12,5-120X210", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92941": { nome: "CH V GYP RU BR12,5-120X220", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94479": { nome: "CH V GYP RU BR12,5-120X220 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92943": { nome: "CH V GYP RU BR12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94477": { nome: "CH V GYP RU BR12,5-120X240 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92946": { nome: "CH V GYP RU BR12,5-120X250", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "145094": { nome: "CH V GYP RU BR12,5-120X250 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92950": { nome: "CH V GYP RU BR12,5-120X255", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "188282": { nome: "CH V GYP RU BR12,5-120X255 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92954": { nome: "CH V GYP RU BR12,5-120X260", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92955": { nome: "CH V GYP RU BR12,5-120X261", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94500": { nome: "CH V GYP RU BR12,5-120X261 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "259326": { nome: "CH V GYP RU BR12,5-120X262 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92959": { nome: "CH V GYP RU BR12,5-120X265", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92960": { nome: "CH V GYP RU BR12,5-120X266", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "291286": { nome: "CH V GYP RU BR12,5-120X266(OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92964": { nome: "CH V GYP RU BR12,5-120X270", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94501": { nome: "CH V GYP RU BR12,5-120X270 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92966": { nome: "CH V GYP RU BR12,5-120X273", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92967": { nome: "CH V GYP RU BR12,5-120X275", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "95762": { nome: "CH V GYP RU BR12,5-120X275 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "167805": { nome: "CH V GYP RU BR12,5-120X271(OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92970": { nome: "CH V GYP RU BR12,5-120X280", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94520": { nome: "CH V GYP RU BR12,5-120X280 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "92975": { nome: "CH V GYP RU BR12,5-120X290", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94521": { nome: "CH V GYP RU BR12,5-120X290 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "94522": { nome: "CH V GYP RU BR12,5-120X300 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140464": { nome: "CH V GYP RU BR15-120X180", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "145093": { nome: "CH V GYP RU BR15-120X180 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "163303": { nome: "CH V GYP RU BR15-120X240 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "158404": { nome: "CH V GYP RU BR15-120X260", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "188283": { nome: "CH V GYP RU BR15-120X260 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            
+            // Placas (RF - Resistente a Fogo)
+            "140363": { nome: "CH V GYP RF BR12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "145098": { nome: "CH V GYP RF BR12,5-120X240 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140365": { nome: "CH V GYP RF BR12,5-120X260", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "299782": { nome: "CH V GYP RF BR12,5-120X275", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140368": { nome: "CH V GYP RF BR12,5-120X280", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "188284": { nome: "CH V GYP RF BR12,5-120X280 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140370": { nome: "CH V GYP RF BR12,5-120X300", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "145097": { nome: "CH V GYP RF BR12,5-120X180 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140372": { nome: "CH V GYP RF BR15-120X180", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "145099": { nome: "CH V GYP RF BR15-120X180 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "140374": { nome: "CH V GYP RF BR15-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "163302": { nome: "CH V GYP RF BR15-120X240 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "276142": { nome: "CH V GYP RF BR15-120X208", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "175992": { nome: "CH V GYP RF BR15-120X220", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "299858": { nome: "CH V GYP RF BR15-120X260", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "175991": { nome: "CH V GYP RF BR15-120X270", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "249130": { nome: "CH V GYP RF BR15-120X270 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "157499": { nome: "CH V GYP RF BR15-120X280", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "160285": { nome: "CH V GYP RF BR15-120X300", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "175308": { nome: "CH V GYP RF BR15-120X300(OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            
+            // Outros Tipos de Placa de Gesso (Acoustic, Small, PROMAPRO+)
+            "168668": { nome: "CH V GYP ST TOP BR12,5-120X180", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "187780": { nome: "CH V GYP ST TOP BR12,5-120X180 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "287782": { nome: "CH V GYP ST TOP BR12,5-120X200", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "295816": { nome: "CH V GYP ST TOP BR12,5-120X200 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "254570": { nome: "CH V GYP ST TOP BR12,5-120X220", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "279128": { nome: "CH V GYP ST TOP BR12,5-1,20X220 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "307172": { nome: "CH V GYP TOP RU BR12,5-120X180", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "304393": { nome: "CH V PROMAPRO+ RF BR15,0-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "304394": { nome: "SFCV4 CH V PROMAPRO+ RF BR15,0-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "310191": { nome: "CH V GYP PROMAPRO+ RF12,5 BR12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "315003": { nome: "CH V GYP PROMAPRO+ RF12,5 BR12,5-120X220", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "133559": { nome: "CHI SOM Q8N8 BR 12,5-1,20 X 2,40", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "162975": { nome: "CHI SOM Q12/25 BQ12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "162976": { nome: "CHI SOM R12/25 BQ12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "162977": { nome: "CH I SOM RA8/15 BQ12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "146303": { nome: "CHI SOM R15N1 BR12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "146301": { nome: "CHI SOM R15N8 BR12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "313665": { nome: "CH GYP GWD BR12,5-120X240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "156838": { nome: "PLACA GYPSUM EST REF 12,5MM 1,20 X 2,4M", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "291194": { nome: "PLACA GYPLAC ST 1220X2440X12,7", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "292937": { nome: "PLACA GYPLAC ST 1220X2440X12,7 EB RXO", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "133846": { nome: "CHI GYP AQUABOARD BR12,5-120x240", tipo: "PLACA DE GESSO (ST/RU/RF)" },
+            "295969": { nome: "CH I GYP AQUABOARD BR12,5-120X240 (OG)", tipo: "PLACA DE GESSO (ST/RU/RF)" },
 
-            // --- ESPECIAIS (Painéis com especificações/tamanhos/tipos diferenciados) ---
-            "200ESPEC15": { nome: "Painel Standard 15mm", tipo: "ESPECIAIS" },
-            "200ESPEC19": { nome: "Painel Standard 19mm", tipo: "ESPECIAIS" },
-            "20094": { nome: "PLACA ST STANDARD 15,00MM", tipo: "ESPECIAIS" },
-            "20095": { nome: "PLACA RU RESISTENTE A UMIDADE 15,00MM", tipo: "ESPECIAIS" },
-            "20096": { nome: "PLACA RF RESISTENTE A FOGO 15,00MM", tipo: "ESPECIAIS" },
-            "300SUPER": { nome: "Placa Superboard (Cimentícia)", tipo: "ESPECIAIS" },
-            "300CHAPA": { nome: "Chapa de Fibra-Cimento", tipo: "ESPECIAIS" },
-            "300FACHADA": { nome: "Placa para Fachada (Externa)", tipo: "ESPECIAIS" },
-            "300PRIME": { nome: "Painel Acústico GypPrime", tipo: "ESPECIAIS" },
+            // ===========================================
+            // 2. PLACAS CIMENTÍCIAS E ESPECIAIS
+            // ===========================================
+            "142685": { nome: "SUPERBOARD ST BQ 6MM 1200X2400", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142686": { nome: "SUPERBOARD ST BQ 8MM 1200X2400", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "160254": { nome: "SUPERBOARD ST BQ 8MM 1200X2400 (OG)", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142687": { nome: "SUPERBOARD ST BQ 10MM 1200X2400", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142676": { nome: "SUPERBOARD ST BQ 10MM 1200X3000", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "295418": { nome: "SUPERBOARD ST BQ 10MM 1200X3000 OG", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142678": { nome: "SUPERBOARD ST BQ 12MM 1200X2400", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "240038": { nome: "SUPERBOARD ST BQ 12MM 1200X2400 OG", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142087": { nome: "SUPERBOARD SIDING LISO 200X2440X8MM BR", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142089": { nome: "SUPERBOARD SIDING MADERA 200X2440X8MM BR", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142109": { nome: "SUPERBOARD MADERA 1220X2440X8MM BR", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "175305": { nome: "SUPERBOARD MADERA 1220X2440X8MM BR(OG)", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142677": { nome: "SUPERBOARD PRO BR 8MM 1200X2400", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "167804": { nome: "SUPERBOARD PRO BR 10MM 120X240(OG)", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "142084": { nome: "SUPERBOARD PRO BR 10MM 120X240", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "163927": { nome: "SUPERBOARD ESTANDAR 1220X2540X4MM BR", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "149934": { nome: "SUPERBOARD ST BQ 4mm 1220 X 2520", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "216265": { nome: "SUPERBOARD ST (BQ) 4MM 1,20M x 2,40M", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "224912": { nome: "SUPERBOARD IA ST (BQ) 6MM 1,20M x 2,40M", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "224913": { nome: "SUPERBOARD IA ST (BQ) 8MM 1,20M x 2,40M", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "224915": { nome: "SUPERBOARD IA ST (BQ) 10MM 1,20M x 2,40M", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "88043": { nome: "SUPERBOARD 2M40X1M20 10MM BORDA RETA", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "143016": { nome: "SUPERBOARD ENTREPISO 1220X2440X14 MM BR", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "111551": { nome: "PROMASTOPW -18m-coil 1 pc/box", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "49060": { nome: "PROMASTOP UNICOLLAR EXPORT 2250X50X12MM", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "291246": { nome: "PROMATECT H12 mm 1200X2400 mm (OG)", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "81975": { nome: "CEDRAL SIDING LISO NATURAL 2M40X0M20X8MM", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "168156": { nome: "MTO CEDRAL TRACE 3150X175X20 R EDG TR05", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "168171": { nome: "MTO CEDRAL TRACE 3150X175X20 TR05", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
+            "168176": { nome: "MTO CEDRAL TRACE 3150X84,5X20 TR05", tipo: "PLACA CIMENTÍCIA/ESPECIAL" },
 
-            // --- REVENDA (MASSAS, FITAS E PARAFUSOS) ---
-            "400MASSA": { nome: "Massa para Tratamento de Juntas", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "401FITA": { nome: "Fita de Papel Microperfurada", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "402PARAF": { nome: "Parafuso Drywall TA 25mm", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "403PARAF35": { nome: "Parafuso Drywall TA 35mm", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "404MASSA25": { nome: "Massa de Acabamento 25KG", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "405PARAFGU": { nome: "Parafuso Gyp-Fix LA 9,5mm", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "406FITARED": { nome: "Fita Tira-Junta Telada (Vermelha)", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "5001": { nome: "MASSA READYMIX BALDE 25KG", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "5002": { nome: "FITA DE PAPEL TRATAMENTO DE JUNTAS", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "5003": { nome: "PARAFUSO TA 25MM", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "5004": { nome: "PARAFUSO LA 9,5MM", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "5005": { nome: "PARAFUSO AUTOATARRAXANTE", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
-            "5006": { nome: "MASSA EM PÓ SACO 20KG", tipo: "REVENDA (MASSAS, FITAS E PARAFUSOS)" },
+            // ===========================================
+            // 3. ACESSÓRIOS E PERFIS
+            // ===========================================
+            // Fixadores e Parafusos
+            "4066966": { nome: "FIX IB GYP TA 3,5X25 CX 1.000", tipo: "ACESSÓRIOS E PERFIS" },
+            "4066968": { nome: "FIX IB GYP TA 3,5X45 CX 500", tipo: "ACESSÓRIOS E PERFIS" },
+            "4066969": { nome: "FIX IB GYP TB 3,5X25 CX 1.000", tipo: "ACESSÓRIOS E PERFIS" },
+            "4066970": { nome: "FIX IB GYP LB 4,2X13 CX 1.000", tipo: "ACESSÓRIOS E PERFIS" },
+            "4084641": { nome: "FIX GYP AQ TAHL 3,5X32 CX 400", tipo: "ACESSÓRIOS E PERFIS" },
+            
+            // Fitas e Telas
+            "4043834": { nome: "FITA CT 30M", tipo: "ACESSÓRIOS E PERFIS" },
+            "4043835": { nome: "FITA JT 150 M CX 10", tipo: "ACESSÓRIOS E PERFIS" },
+            "4043836": { nome: "ACAB R GYP FITA 48 BANDA A 10 CX 10", tipo: "ACESSÓRIOS E PERFIS" },
+            "4043837": { nome: "ACAB R GYP FITA 70 BANDA A 10 CX 10", tipo: "ACESSÓRIOS E PERFIS" },
+            "4043838": { nome: "ACAB R GYP FITA 90 BANDA A 10 CX 10", tipo: "ACESSÓRIOS E PERFIS" },
+            "4094219": { nome: "ACAB R GYP GWD TELA P/JUNTAS 20CMX50M RL", tipo: "ACESSÓRIOS E PERFIS" },
+            "4094217": { nome: "ACAB R GYP GWD TELA BASECOAT 1MX50M RL", tipo: "ACESSÓRIOS E PERFIS" },
+            "4066040": { nome: "CINTA BORDE VERDE REFORZADA IC", tipo: "ACESSÓRIOS E PERFIS" },
+            
+            // Perfis e Outros Acessórios
+            "4048659": { nome: "PER R GYP CANT 23X23 0,50 300", tipo: "ACESSÓRIOS E PERFIS" },
+            "4085759": { nome: "ACESS R GYP AQ PERFIL INICIO PVC 300", tipo: "ACESSÓRIOS E PERFIS" },
+            "4044121": { nome: "ACESS R GYP PLATINA 20 400MM", tipo: "ACESSÓRIOS E PERFIS" },
+            "4043804": { nome: "ACESS R GYP PLATINA 25 600MM", tipo: "ACESSÓRIOS E PERFIS" },
+            "4044263": { nome: "ACESS R GYP TIRANTE S/ELO 300 (100PC)", tipo: "ACESSÓRIOS E PERFIS" },
+            "4043819": { nome: "ACESS R GYP UNIÃO S47 200PCS", tipo: "ACESSÓRIOS E PERFIS" },
+            "4043818": { nome: "ACESS R GYP REG S47 200PCS", tipo: "ACESSÓRIOS E PERFIS" },
+            "167994": { nome: "PER V GYP MONT 90X35 0,50 250(OG)", tipo: "ACESSÓRIOS E PERFIS" },
+            "50093": { nome: "PSEAL-PL-SK 2,5 SK/G str.coil 25m/20mm", tipo: "ACESSÓRIOS E PERFIS" },
+            "4084949": { nome: "ARAME GALV ENCAPADO 18-PVC CX 20(ES)", tipo: "ACESSÓRIOS E PERFIS" },
+            
+            // ===========================================
+            // 4. QUÍMICOS E MASSAS
+            // ===========================================
+            "4577023": { nome: "GESSO RECICLADO", tipo: "QUÍMICOS E MASSAS" },
+            "296922": { nome: "CP R GYP MASSA PRONTA 25KG", tipo: "QUÍMICOS E MASSAS" },
+            "298833": { nome: "CP R GYP MASSA PRONTA 14 KG", tipo: "QUÍMICOS E MASSAS" },
+            "4087197": { nome: "CP R GYP MASSA PO 20KG", tipo: "QUÍMICOS E MASSAS" },
+            "93521": { nome: "CP V GYP MASSA PO 20Kg", tipo: "QUÍMICOS E MASSAS" },
+            "104772": { nome: "CP V GYP MASSA PO 20Kg (OG)", tipo: "QUÍMICOS E MASSAS" },
+            "4088092": { nome: "CP R GYP COLA 20KG", tipo: "QUÍMICOS E MASSAS" },
+            "93522": { nome: "CP V GYP COLA 20Kg", tipo: "QUÍMICOS E MASSAS" },
+            "164146": { nome: "CP V GYP COLA 20KG (OG)", tipo: "QUÍMICOS E MASSAS" },
+            "93524": { nome: "CP V GYP FGA COLA 20Kg", tipo: "QUÍMICOS E MASSAS" },
+            "93038": { nome: "CP V QUALIGESSOCOLA 20Kg", tipo: "QUÍMICOS E MASSAS" },
+            "165703": { nome: "CP V QUALIGESSOCOLA 20Kg (OG)", tipo: "QUÍMICOS E MASSAS" },
+            "93041": { nome: "CP V QUALIGESSOCOLA 5Kg", tipo: "QUÍMICOS E MASSAS" },
+            "149280": { nome: "MASSA PROMAT P/TRATAMENTO DE JUNTAS 20KG", tipo: "QUÍMICOS E MASSAS" },
+            "271453": { nome: "MASSA PROMAT P/TRAT DE JUNTAS 20KG OG", tipo: "QUÍMICOS E MASSAS" },
+            "167797": { nome: "CP I SB MASSA PRONTA P/JUNTAS 22KG (OG)", tipo: "QUÍMICOS E MASSAS" },
+            "295339": { nome: "MASILLA SUPERBOARD ENLUCIDO 30KG EXPO", tipo: "QUÍMICOS E MASSAS" },
+            "4089902": { nome: "PROMASEAL-A white 310 ml 12pc/box Rec", tipo: "QUÍMICOS E MASSAS" },
 
-            // --- ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ) ---
-            "600MONT70": { nome: "Montante Estrutural 70mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "601GUIA70": { nome: "Guia Estrutural 70mm", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "602CANTA": { nome: "Cantoneira de Acabamento CL-25", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "603PERFILF530": { nome: "Perfil F-530 para Forro", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "604REGULADOR": { nome: "Regulador para Forro (Metálico)", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "605MANTA": { nome: "Manta Acústica de Borracha (Rolo)", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "606LA": { nome: "Lã de Vidro 50mm - Rolo", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "607LA100": { nome: "Lã de Vidro 100mm - Placa", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "608VEDA": { nome: "Fita de Vedação em Espuma", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "7001": { nome: "MONTANTE ESTRUTURAL 70MM", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "7002": { nome: "GUIA ESTRUTURAL 70MM", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "7003": { nome: "PERFIL F530 3M", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "7004": { nome: "CANELETA SIMPLES", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-            "7005": { nome: "LÃ DE ROCHA 50MM", tipo: "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)" },
-
-            // --- OUTROS (Itens que não se encaixam nas 4 categorias principais) ---
-            "800SILICONE": { nome: "Silicone Selante Neutro", tipo: "OUTROS (Itens Diversos)" },
-            "801TELA": { nome: "Tela para Reforço de Revestimento", tipo: "OUTROS (Itens Diversos)" },
-            "802APLICA": { nome: "Aplicador de Massa (Ferramenta)", tipo: "OUTROS (Itens Diversos)" },
+            // ===========================================
+            // 5. OUTROS REVESTIMENTOS E MATERIAIS
+            // ===========================================
+            "166553": { nome: "SIMPLISIMA MAD VETEADA SOFT 6MM EXP 20UN", tipo: "OUTROS REVESTIMENTOS" },
+            "303538": { nome: "SIMPL MARM TRAVIATTA GRIS 6MM EXP 20UN", tipo: "OUTROS REVESTIMENTOS" },
+            "304940": { nome: "SIMPL PIE CALIZA CREMA 6MM EXP 20UN", tipo: "OUTROS REVESTIMENTOS" },
+            "304941": { nome: "SIMPL MAD RUSTICA NATURAL 6MM EXP 20UN", tipo: "OUTROS REVESTIMENTOS" },
+            "216396": { nome: "SIMPL MAD RÚSTICA NATURAL 6MM EXP 40UN", tipo: "OUTROS REVESTIMENTOS" },
+            "303533": { nome: "SIMPL CER MOSAICO AQUA 6MM EXP 20UN", tipo: "OUTROS REVESTIMENTOS" },
+            "303537": { nome: "SIMPL MARM CALACATTA OCRE 6MM EXP 20UN", tipo: "OUTROS REVESTIMENTOS" },
+            "303534": { nome: "SIMPL CER MOSAICO GRECCO 6MM EXP 20UN", tipo: "OUTROS REVESTIMENTOS" },
+            "4084788": { nome: "LA DE PET I 12,5X1,20M 15M² P/PERFIL 70M", tipo: "OUTROS REVESTIMENTOS" }
         };
         // FIM DA BASE DE DADOS DE ITENS
 
@@ -334,7 +520,7 @@
         function calcularOcupacaoMaterial() {
             const contagemMaterial = {};
             const tiposMaterial = [
-                "PB 1,80", "ESPECIAIS", "REVENDA (MASSAS, FITAS E PARAFUSOS)", "ACESSÓRIOS (METÁLICOS, MANTAS, E LÃ)", "OUTROS (Itens Diversos)"
+                "PLACA DE GESSO (ST/RU/RF)", "PLACA CIMENTÍCIA/ESPECIAL", "ACESSÓRIOS E PERFIS", "QUÍMICOS E MASSAS", "OUTROS REVESTIMENTOS"
             ];
 
             tiposMaterial.forEach(tipo => contagemMaterial[tipo] = 0);
@@ -358,9 +544,7 @@
             const dashboardMaterial = document.getElementById('dashboard-material');
             dashboardMaterial.innerHTML = '<h3>% por Tipo de Material (em Qtd.)</h3>';
 
-            // Garante que o card "OUTROS" também seja exibido se necessário
-            const tiposParaExibir = tiposMaterial.filter(tipo => tipo !== "OUTROS (Itens Diversos)" || contagemMaterial[tipo] > 0 || totalItens === 0);
-
+            const tiposParaExibir = tiposMaterial;
 
             tiposParaExibir.forEach(tipo => {
                 const qtd = contagemMaterial[tipo];
@@ -369,7 +553,7 @@
                 const card = document.createElement('div');
                 card.className = 'card-dashboard';
                 card.innerHTML = `
-                    <h4>${tipo.split(' (')[0]}</h4>
+                    <h4>${tipo.split(' (')[0].replace('/', '/<br>')}</h4>
                     <p>Qtd: ${qtd.toFixed(1)} | ${percentual.toFixed(1)}%</p>
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: ${percentual.toFixed(1)}%; background-color: var(--cor-ocupado);"></div>
@@ -666,7 +850,7 @@
             }
             
             itemDiv.querySelector('.item-nome-material').value = nome;
-            itemDiv.querySelector('h4').textContent = `Item ${index + 1}: ${nome}`;
+            itemDiv.querySelector('h4').textContent = `Item ${index + 1}: ${nome.split(' ')[0]}...`; // Atualiza o título resumido
         }
         
         function removerItem(index) {
