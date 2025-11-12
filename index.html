@@ -120,6 +120,7 @@
             font-weight: bold;
             text-transform: uppercase;
             font-size: 0.85em;
+            white-space: nowrap; /* Evita quebra de linha no cabeçalho */
         }
 
         /* Linha da Vaga */
@@ -137,9 +138,9 @@
         }
         
         .status-liberado { color: #28a745; font-weight: bold; }
-        .status-fifo { color: #007bff; font-weight: bold; }
-        .status-bloqueado, .status-qa { color: #dc3545; font-weight: bold; }
-        .status-cura { color: #ffc107; font-weight: bold; }
+        .status-na-fila-do-fifo { color: #007bff; font-weight: bold; }
+        .status-bloqueado, .status-bloqueado-qa { color: #dc3545; font-weight: bold; }
+        .status-em-cura { color: #ffc107; font-weight: bold; }
 
         /* --- Modal de Edição/Visualização --- */
         .modal {
@@ -630,7 +631,7 @@
                     
                     let statusClass = '';
                     if (itemPrincipal.status) {
-                        statusClass = 'status-' + itemPrincipal.status.toLowerCase().replace(/\s/g, '-');
+                        statusClass = 'status-' + itemPrincipal.status.toLowerCase().replace(/\s/g, '-').replace(' ', '-');
                     }
 
                     const tr = document.createElement('tr');
@@ -880,7 +881,7 @@
             }
             
             itemDiv.querySelector('.item-nome-material').value = nome;
-            itemDiv.querySelector('h4').textContent = `Item ${index + 1}: ${nome.split(' ')[0]}...`; // Atualiza o título resumido
+            itemDiv.querySelector('h4').textContent = `Item ${index + 1}: ${nome}`; // Atualiza o título completo
         }
         
         function removerItem(index) {
@@ -894,7 +895,7 @@
             container.querySelectorAll('.item-form').forEach((itemForm, newIndex) => {
                  itemForm.id = `item-form-${newIndex}`;
                  // Atualizar o título do h4 e o onclick do botão de remover
-                 itemForm.querySelector('h4').textContent = `Item ${newIndex + 1}: ${itemForm.querySelector('.item-nome-material').value.split(' ')[0]}...`;
+                 itemForm.querySelector('h4').textContent = `Item ${newIndex + 1}: ${itemForm.querySelector('.item-nome-material').value}`;
                  itemForm.querySelector('button[onclick]').setAttribute('onclick', `removerItem(${newIndex})`);
                  itemForm.querySelector('.item-codigo').setAttribute('onchange', `atualizarNomeMaterial(this, ${newIndex})`);
             });
